@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#07070a">
+<title>Project | Cutline</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>#delete-project,#add-clip,#e-delete,#retry{display:none!important}</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="logo" href="index.html" aria-label="Cutline home">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#ff5a2b"/><path d="M8 23 24 9" stroke="#0a0a0c" stroke-width="3.4" stroke-linecap="round"/><circle cx="9.5" cy="10.5" r="2.6" fill="#0a0a0c"/><circle cx="22.5" cy="21.5" r="2.6" fill="#0a0a0c"/></svg>
+      Cutline
+    </a>
+    <nav aria-label="Main"><a href="app.html">Projects</a></nav>
+    <a class="btn small" href="app.html">New project</a>
+  </div>
+</header>
+
+<main class="app">
+  <div class="wrap">
+    <div class="page-head">
+      <div>
+        <p class="eyebrow"><a href="app.html">Projects</a> /</p>
+        <h1 id="title">Loading</h1>
+        <p id="meta"></p>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn ghost small" id="add-clip" hidden>Add a clip by time</button>
+        <button class="btn danger small" id="delete-project">Delete project</button>
+      </div>
+    </div>
+
+    <div id="notice"><div class="notice" role="note"><div><strong>Read-only preview. </strong>This page shows one saved demo project. Uploading a video and saving edits work in the installed app.</div></div></div>
+
+    <section class="panel" id="progress" hidden aria-live="polite">
+      <div class="stages">
+        <div class="stage-step" data-stage="prepare"><small>01</small>Read the video</div>
+        <div class="stage-step" data-stage="transcribe"><small>02</small>Transcribe</div>
+        <div class="stage-step" data-stage="analyze"><small>03</small>Find the moments</div>
+        <div class="stage-step" data-stage="render"><small>04</small>Render clips</div>
+      </div>
+      <div class="meter"><i id="bar"></i></div>
+      <p id="detail" style="margin-top:12px;color:var(--ink-2)"></p>
+    </section>
+
+    <section id="failed" hidden>
+      <div class="notice error" role="alert"><div><strong>This project stopped. </strong><span id="error-text"></span></div></div>
+      <button class="btn" id="retry">Retry</button>
+    </section>
+
+    <h2 class="section" id="clips-head" hidden>Clips</h2>
+    <div class="clips" id="clips"></div>
+  </div>
+</main>
+
+<dialog class="editor" id="editor" aria-labelledby="e-heading">
+  <div class="editor-grid">
+    <div class="editor-video"><video id="e-video" controls playsinline preload="metadata"></video></div>
+    <form class="editor-body" id="e-form" method="dialog" novalidate>
+      <div class="editor-top">
+        <p class="eyebrow" id="e-heading">Edit clip</p>
+        <button class="btn ghost small" type="button" id="e-close">Close</button>
+      </div>
+
+      <div class="field">
+        <label for="e-title">Title</label>
+        <input class="input" id="e-title" maxlength="120">
+      </div>
+
+      <div class="field" id="e-score-field">
+        <span class="label">Clip score <span class="hint">AI estimate, not a forecast</span></span>
+        <div class="bars" id="e-bars"></div>
+        <p class="reason" id="e-reason"></p>
+      </div>
+
+      <div class="field">
+        <label for="e-description">Post caption</label>
+        <textarea class="input" id="e-description" rows="3" maxlength="2200"></textarea>
+        <div><button class="btn ghost small" type="button" id="e-copy">Copy caption</button></div>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <span class="label" id="el-captions">Caption style</span>
+          <div class="seg" role="radiogroup" aria-labelledby="el-captions">
+            <label><input type="radio" name="captionStyle" value="pop"><span>Bold</span></label>
+            <label><input type="radio" name="captionStyle" value="box"><span>Boxed</span></label>
+            <label><input type="radio" name="captionStyle" value="clean"><span>Clean</span></label>
+            <label><input type="radio" name="captionStyle" value="none"><span>None</span></label>
+          </div>
+        </div>
+        <div class="field">
+          <span class="label" id="el-aspect">Shape</span>
+          <div class="seg" role="radiogroup" aria-labelledby="el-aspect">
+            <label><input type="radio" name="aspect" value="9:16"><span>9:16</span></label>
+            <label><input type="radio" name="aspect" value="1:1"><span>1:1</span></label>
+            <label><input type="radio" name="aspect" value="4:5"><span>4:5</span></label>
+            <label><input type="radio" name="aspect" value="16:9"><span>16:9</span></label>
+          </div>
+        </div>
+        <div class="field">
+          <span class="label" id="el-layout">Framing</span>
+          <div class="seg" role="radiogroup" aria-labelledby="el-layout">
+            <label><input type="radio" name="layout" value="fill"><span>Fill</span></label>
+            <label><input type="radio" name="layout" value="fit"><span>Fit</span></label>
+          </div>
+        </div>
+        <div class="field" id="e-focus-field">
+          <label for="e-focus">Crop position <span class="hint">left to right</span></label>
+          <input type="range" id="e-focus" min="0" max="100" step="1">
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="label">Trim <span class="hint">seconds into the original video</span></span>
+        <div class="trim">
+          <input class="input" type="number" id="e-start" step="0.1" min="0" aria-label="Clip start in seconds">
+          <span>to</span>
+          <input class="input" type="number" id="e-end" step="0.1" min="0" aria-label="Clip end in seconds">
+          <span class="mono" id="e-length"></span>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="label">Caption words <span class="hint">Fix a word, or clear it to hide it</span></span>
+        <div class="words" id="e-words"></div>
+      </div>
+
+      <div class="editor-foot">
+        <button class="btn accent" type="submit" id="e-save">Save changes</button>
+        <a class="btn" id="e-download" download>Download MP4</a>
+        <span class="spacer"></span>
+        <button class="btn danger small" type="button" id="e-delete">Delete clip</button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+<dialog class="editor" id="adder" style="width:min(460px,100% - 24px)" aria-labelledby="a-heading">
+  <form class="editor-body" id="a-form" method="dialog" novalidate>
+    <div class="editor-top">
+      <p class="eyebrow" id="a-heading">Add a clip by time</p>
+      <button class="btn ghost small" type="button" id="a-close">Close</button>
+    </div>
+    <div class="field">
+      <label for="a-title">Title</label>
+      <input class="input" id="a-title" maxlength="120" value="My clip">
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label for="a-start">Start</label>
+        <input class="input mono" id="a-start" placeholder="1:05" inputmode="numeric">
+      </div>
+      <div class="field">
+        <label for="a-end">End</label>
+        <input class="input mono" id="a-end" placeholder="1:40" inputmode="numeric">
+      </div>
+    </div>
+    <p class="hint" id="a-hint" style="font-size:.8125rem;color:var(--ink-3)"></p>
+    <div class="editor-foot"><button class="btn accent" type="submit">Create clip</button></div>
+  </form>
+</dialog>
+
+<script src="preview.js"></script>
+<script type="module" src="project.js"></script>
+</body>
+</html>

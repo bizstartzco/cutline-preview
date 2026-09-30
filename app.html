@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#07070a">
+<title>Your projects | Cutline</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>#delete-project,#add-clip,#e-delete,#retry{display:none!important}</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="logo" href="index.html" aria-label="Cutline home">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#ff5a2b"/><path d="M8 23 24 9" stroke="#0a0a0c" stroke-width="3.4" stroke-linecap="round"/><circle cx="9.5" cy="10.5" r="2.6" fill="#0a0a0c"/><circle cx="22.5" cy="21.5" r="2.6" fill="#0a0a0c"/></svg>
+      Cutline
+    </a>
+    <nav aria-label="Main"><a href="app.html" aria-current="page">Projects</a></nav>
+  </div>
+</header>
+
+<main class="app">
+  <div class="wrap">
+    <div class="page-head">
+      <div>
+        <h1>New project</h1>
+        <p>Add a long video and get back captioned clips.</p>
+      </div>
+    </div>
+
+    <div id="notice"><div class="notice" role="note"><div><strong>Read-only preview. </strong>This page shows one saved demo project. Uploading a video and saving edits work in the installed app.</div></div></div>
+
+    <form class="panel" id="new" novalidate>
+      <div class="tabs" role="tablist" aria-label="Video source">
+        <button type="button" role="tab" id="tab-upload" aria-selected="true" aria-controls="pane-upload">Upload a file</button>
+        <button type="button" role="tab" id="tab-link" aria-selected="false" aria-controls="pane-link">Paste a link</button>
+      </div>
+
+      <div id="pane-upload" role="tabpanel" aria-labelledby="tab-upload">
+        <label class="drop" id="drop">
+          <input type="file" id="file" accept="video/*,.mkv" hidden>
+          <strong>Drop a video here</strong>
+          <span>or click to choose one. MP4, MOV, MKV, WebM or AVI, up to 8 GB.</span>
+        </label>
+      </div>
+
+      <div id="pane-link" role="tabpanel" aria-labelledby="tab-link" hidden>
+        <div class="field">
+          <label for="link">Video link</label>
+          <input class="input" type="url" id="link" placeholder="https://" autocomplete="off">
+          <span class="hint">A direct video file, or a page from a video site. Only import video you have the right to use.</span>
+        </div>
+      </div>
+
+      <div class="options">
+        <div class="field">
+          <span class="label" id="l-aspect">Clip shape</span>
+          <div class="seg" role="radiogroup" aria-labelledby="l-aspect">
+            <label><input type="radio" name="aspect" value="9:16" checked><span>9:16 vertical</span></label>
+            <label><input type="radio" name="aspect" value="1:1"><span>1:1 square</span></label>
+            <label><input type="radio" name="aspect" value="4:5"><span>4:5 portrait</span></label>
+            <label><input type="radio" name="aspect" value="16:9"><span>16:9 wide</span></label>
+          </div>
+        </div>
+        <div class="field">
+          <span class="label" id="l-layout">Framing</span>
+          <div class="seg" role="radiogroup" aria-labelledby="l-layout">
+            <label><input type="radio" name="layout" value="fill" checked><span>Fill the frame</span></label>
+            <label><input type="radio" name="layout" value="fit"><span>Fit with blurred backdrop</span></label>
+          </div>
+        </div>
+        <div class="field">
+          <span class="label" id="l-captions">Captions</span>
+          <div class="seg" role="radiogroup" aria-labelledby="l-captions">
+            <label><input type="radio" name="captionStyle" value="pop" checked><span>Bold</span></label>
+            <label><input type="radio" name="captionStyle" value="box"><span>Boxed</span></label>
+            <label><input type="radio" name="captionStyle" value="clean"><span>Clean</span></label>
+            <label><input type="radio" name="captionStyle" value="none"><span>None</span></label>
+          </div>
+        </div>
+        <div class="field">
+          <span class="label" id="l-length">Clip length</span>
+          <div class="seg" role="radiogroup" aria-labelledby="l-length">
+            <label><input type="radio" name="clipLength" value="auto" checked><span>Auto</span></label>
+            <label><input type="radio" name="clipLength" value="short"><span>Under 30s</span></label>
+            <label><input type="radio" name="clipLength" value="medium"><span>30 to 60s</span></label>
+            <label><input type="radio" name="clipLength" value="long"><span>60 to 120s</span></label>
+          </div>
+        </div>
+        <div class="field">
+          <label for="language">Spoken language</label>
+          <select class="input" id="language">
+            <option value="">Detect automatically</option>
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+            <option value="ne">Nepali</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+            <option value="pt">Portuguese</option>
+            <option value="it">Italian</option>
+            <option value="id">Indonesian</option>
+            <option value="ja">Japanese</option>
+            <option value="ko">Korean</option>
+            <option value="ar">Arabic</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="prompt">What should it look for? <span class="hint">Optional</span></label>
+          <input class="input" type="text" id="prompt" maxlength="500" placeholder="e.g. the parts about pricing, or the funniest moments">
+        </div>
+      </div>
+
+      <div class="form-foot">
+        <div class="picked" id="picked" aria-live="polite">No video chosen yet.</div>
+        <button class="btn accent" type="submit" id="go">Find my clips</button>
+      </div>
+      <div class="meter" id="upload-meter" hidden style="margin-top:18px"><i></i></div>
+    </form>
+
+    <h2 class="section">Projects</h2>
+    <div class="projects" id="projects"></div>
+  </div>
+</main>
+
+<script src="preview.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
