@@ -66,7 +66,7 @@ function upload(video, options) {
       if (xhr.status >= 200 && xhr.status < 300) resolve(data);
       else reject(new Error(data.error || `Upload failed (${xhr.status})`));
     };
-    xhr.onerror = () => reject(new Error('The upload was interrupted. Is the Cutline server still running?'));
+    xhr.onerror = () => reject(new Error('The upload was interrupted. Is the Clipping Clips server still running?'));
     xhr.send(video);
   });
 }

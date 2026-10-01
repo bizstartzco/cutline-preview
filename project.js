@@ -17,7 +17,7 @@ const ratio = (aspect) => aspect.replace(':', ' / ');
 
 // ----- page -----
 function paint() {
-  document.title = `${project.title} | Cutline`;
+  document.title = `${project.title} | Clipping Clips`;
   $('#title').textContent = project.title;
   const meta = [];
   if (project.meta) meta.push(clock(project.meta.duration), `${project.meta.width}×${project.meta.height}`);

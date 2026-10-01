@@ -1312,6 +1312,21 @@ html.js .rv:not(.in) .sbars i::after {
   }
 }
 @media (max-width: 680px) {
+  .island {
+    padding-left: 14px;
+    gap: 8px;
+  }
+  .island .logo {
+    gap: 8px;
+    font-size: 1rem;
+  }
+  .island .logo svg {
+    width: 24px;
+    height: 24px;
+  }
+  .island-cta {
+    padding: 0 12px;
+  }
   .hero {
     padding-top: 128px;
   }

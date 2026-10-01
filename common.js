@@ -72,7 +72,7 @@ export const STATUS_LABEL = {
 export const isBusy = (status) => !['done', 'error'].includes(status);
 
 // Hosted mode: shows who is signed in, how much of the month's allowance is
-// used, and a way out. Does nothing when Cutline runs on a personal computer.
+// used, and a way out. Does nothing when Clipping Clips runs on a personal computer.
 export async function mountAccount() {
   if (isPreview) return null;
   const me = await api('/auth/me').catch(() => null);
@@ -97,10 +97,14 @@ export async function mountAccount() {
 
 // Says which keys are missing and offers the panel to add them.
 export function keyNotice(status) {
+  // Only the admin is told the cause; visitors just see that uploads are paused.
+  if (status.videoTools === false) {
+    return el('div', { class: 'notice error', role: 'alert' }, el('div', {}, el('strong', { text: 'Video processing is not available on this server. ' }), 'ffmpeg could not be started. Set FFMPEG_PATH and FFPROBE_PATH to working binaries and restart.'));
+  }
   if (status.fixture) return null;
   // Visitors of the hosted version cannot fix a missing key, so they are told only that uploads are paused.
   if (status.public && status.picker === undefined) {
-    return status.ready ? null : el('div', { class: 'notice', role: 'status' }, el('div', {}, el('strong', { text: 'Cutline is not accepting videos right now. ' }), 'Please try again later.'));
+    return status.ready ? null : el('div', { class: 'notice', role: 'status' }, el('div', {}, el('strong', { text: 'Clipping Clips is not accepting videos right now. ' }), 'Please try again later.'));
   }
   const missing = [];
   if (!status.transcription) missing.push('a speech-to-text key');
@@ -134,7 +138,7 @@ export function openKeys(status) {
     'form',
     { class: 'editor-body', method: 'dialog', novalidate: true },
     el('div', { class: 'editor-top' }, el('p', { class: 'eyebrow', id: 'keys-heading', text: 'API keys' }), el('button', { class: 'btn ghost small', type: 'button', text: 'Close', onclick: () => dialog.close() })),
-    el('p', { style: 'color:var(--ink-2);font-size:.9375rem', text: 'Cutline uses two outside services, billed to your own accounts. Keys are stored on this computer only.' }),
+    el('p', { style: 'color:var(--ink-2);font-size:.9375rem', text: 'Clipping Clips uses two outside services, billed to your own accounts. Keys are stored on this computer only.' }),
     field('gemini', 'Gemini key: picks the moments', 'AIza...', ['Create one at ', link('https://aistudio.google.com/apikey', 'aistudio.google.com'), '. Used first when saved.'], status.gemini),
     field('anthropic', 'Anthropic key: picks the moments if there is no Gemini key', 'sk-ant-...', ['Create one at ', link('https://console.anthropic.com/settings/keys', 'console.anthropic.com'), '.'], status.anthropic),
     field('groq', 'Groq key: turns speech into text', 'gsk_...', ['Create one at ', link('https://console.groq.com/keys', 'console.groq.com'), '. The free tier is enough to start.'], provider === 'groq'),
