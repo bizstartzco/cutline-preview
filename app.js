@@ -1,4 +1,5 @@
-import { $, api, clock, el, isBusy, isPreview, keyNotice, routes, STATUS_LABEL, toast } from './common.js';
+import { mountShell } from './shell.js';
+import { $, api, clock, el, isBusy, isPreview, keyNotice, mountAccount, openKeys, routes, STATUS_LABEL, toast } from './common.js';
 
 const form = $('#new');
 const fileInput = $('#file');
@@ -140,7 +141,13 @@ api('/status')
   .then((status) => {
     const notice = keyNotice(status);
     if (notice) $('#notice').append(notice);
-    if (!status.linkImport) $('#tab-link').title = 'Only direct video file links work until yt-dlp is installed.';
+    // Keys can be changed at any time from the top bar.
+    if (!isPreview && !status.fixture && status.picker !== undefined) $('.bar nav').append(el('a', { href: '#keys', text: 'API keys', onclick: (e) => (e.preventDefault(), openKeys(status)) }));
+    // The hosted version takes uploads only.
+    if (status.public) $('.tabs').hidden = true;
+    else if (!status.linkImport) $('#tab-link').title = 'Only direct video file links work until yt-dlp is installed.';
   })
   .catch(() => {});
+mountShell('clips');
+mountAccount();
 refresh();

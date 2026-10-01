@@ -237,6 +237,21 @@ html.js .rail.rv {
 .hero-form .btn {
   height: 50px;
 }
+.hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 36px;
+}
+.hero-cta .btn {
+  height: 56px;
+  padding: 0 28px;
+  font-size: 1.0313rem;
+}
+.foot a {
+  color: var(--ink-2);
+}
 .hero-note {
   margin-top: 16px;
   font-size: 0.875rem;

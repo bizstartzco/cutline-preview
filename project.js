@@ -1,4 +1,5 @@
-import { $, $$, api, clock, el, isBusy, isPreview, keyNotice, routes, toast } from './common.js';
+import { mountShell } from './shell.js';
+import { $, $$, api, clock, el, isBusy, isPreview, keyNotice, mountAccount, routes, toast } from './common.js';
 
 const id = isPreview ? 'demo' : location.pathname.split('/').pop();
 let project = null;
@@ -293,4 +294,6 @@ api('/status')
     if (notice) $('#notice').append(notice);
   })
   .catch(() => {});
+mountShell('clips');
+mountAccount();
 load();
